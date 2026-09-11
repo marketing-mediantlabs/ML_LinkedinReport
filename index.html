@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ML LinkedIn Report — Mediant Labs</title>
+<style>
+  :root{
+    --bg:#0f1117; --s:#181c27; --s2:#1e2335; --br:#2a3047;
+    --tx:#f0f2f8; --sub:#8b93b0; --green:#21a866; --blue:#2189bd;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; background:var(--bg); color:var(--tx);
+    font-family:'Google Sans','Product Sans',Roboto,Helvetica,Arial,sans-serif;
+    display:flex; align-items:center; justify-content:center; padding:40px 24px;
+  }
+  a{color:var(--blue); text-decoration:none;}
+  a:hover{color:var(--green);}
+  .wrap{width:100%; max-width:680px;}
+  .brand{
+    font-size:26px; font-weight:800; letter-spacing:.2px; margin:0;
+    background:linear-gradient(90deg,#21a866,#2189bd);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lede{color:var(--sub); font-size:14px; line-height:1.6; margin:8px 0 32px;}
+  .cards{display:grid; gap:14px;}
+  .card{
+    display:block; background:var(--s); border:1px solid var(--br);
+    border-radius:13px; padding:20px 22px; position:relative; overflow:hidden;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .card:hover{border-color:var(--green); transform:translateY(-1px);}
+  .card__accent{position:absolute; top:0; left:0; right:0; height:3px;}
+  .card__title{font-size:15px; font-weight:700; color:var(--tx); margin-bottom:5px;}
+  .card__body{font-size:12px; color:var(--sub); line-height:1.6;}
+  .tag{
+    display:inline-block; margin-top:11px; padding:3px 10px; border-radius:20px;
+    font-size:10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+  }
+  .foot{margin-top:32px; font-size:11px; color:var(--sub); line-height:1.7;}
+  code{background:var(--s2); padding:2px 6px; border-radius:5px; font-size:11px;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="brand">Mediant Labs</h1>
+    <p class="lede">
+      LinkedIn analytics for the company page — follower growth, page visitors, content
+      performance, ad campaigns and competitor benchmarking, with monthly data upload
+      and month-over-month trends.
+    </p>
+
+    <div class="cards">
+      <a class="card" href="linkedin-analytics-dashboard.html">
+        <div class="card__accent" style="background:linear-gradient(90deg,#21a866,#2189bd)"></div>
+        <div class="card__title">Open the dashboard &rarr;</div>
+        <div class="card__body">
+          All six sections, live. Upload each month's LinkedIn export as CSV or PDF and
+          the totals, charts and trends update from where you left off. Uploads save to
+          your own browser.
+        </div>
+        <span class="tag" style="background:rgba(33,168,102,.15); color:var(--green)">Start here</span>
+      </a>
+
+      <a class="card" href="https://github.com/marketing-mediantlabs/ML_LinkedinReport">
+        <div class="card__accent" style="background:linear-gradient(90deg,#2189bd,#5ec7f5)"></div>
+        <div class="card__title">Source &amp; React app &rarr;</div>
+        <div class="card__body">
+          The repository holds the standalone dashboard, a React + TypeScript version in
+          <code>app/</code> for developers, and a full design handoff spec for rebuilding
+          it in another codebase.
+        </div>
+        <span class="tag" style="background:rgba(33,137,189,.15); color:var(--blue)">For developers</span>
+      </a>
+    </div>
+
+    <p class="foot">
+      Uploads are stored per browser, not on a server — each viewer sees the baseline
+      history until they upload their own files.<br/>
+      The dashboard also runs offline: download
+      <code>linkedin-analytics-dashboard.html</code> and open it directly.
+    </p>
+  </div>
+</body>
+</html>

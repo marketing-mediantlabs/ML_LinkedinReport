@@ -1,0 +1,23 @@
+# Company data — never commit LinkedIn exports
+uploads/
+*.csv
+*.xls
+*.xlsx
+!app/src/data/*.ts
+
+# Dependencies & builds
+node_modules/
+dist/
+.vite/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+*.log
