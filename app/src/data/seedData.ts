@@ -5,35 +5,19 @@ import type { LocRow, TopPost, CompRow, AdSetRow } from '../types';
  * Apr 2025 - Jul 2026. Uploads merge on top of this; it is never wiped.
  */
 
-export const MONTHS = ['Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26'];
-export const F_TOT = [67,83,153,119,132,173,128,122,39,83,231,216,300,445,510,144,646];
+export const MONTHS: string[] = [];
+export const F_TOT: number[] = [];
 /** Index of the first 2026 month, used to colour the bars by year. */
-export const F_YEAR_SPLIT = 9;
+export const F_YEAR_SPLIT = 0;
 /** Trailing partial month gets the orange treatment. */
-export const F_PARTIAL_INDEX = 15;
+export const F_PARTIAL_INDEX = -1;
 
-export const F_SEN_L = ['Senior','Entry','Manager','Director','Training','VP','Owner','CXO','Partner'];
-export const F_SEN_D = [802,791,106,103,45,42,27,18,6];
-export const F_CS_L = ['10,001+','51–200','1,001–5K','11–50','201–500','501–1K','5K–10K','2–10'];
-export const F_CS_D = [457,335,277,206,190,134,95,87];
+export const F_SEN_L: string[] = [];
+export const F_SEN_D: number[] = [];
+export const F_CS_L: string[] = [];
+export const F_CS_D: number[] = [];
 
-export const F_LOC: LocRow[] = [
-  { l: 'Greater Chennai Area, India', v: 1049, p: 46.0 },
-  { l: 'Greater Bengaluru Area, India', v: 320, p: 14.0 },
-  { l: 'Greater Delhi Area, India', v: 244, p: 10.7 },
-  { l: 'Greater Hyderabad Area, India', v: 160, p: 7.0 },
-  { l: 'Mumbai Metropolitan Region, India', v: 109, p: 4.8 },
-  { l: 'Greater Coimbatore Area, India', v: 94, p: 4.1 },
-  { l: 'Pune/Pimpri-Chinchwad Area, India', v: 76, p: 3.3 },
-  { l: 'Noida, India', v: 59, p: 2.6 },
-  { l: 'Greater Kolkata Area, India', v: 46, p: 2.0 },
-  { l: 'Greater Madurai Area, India', v: 39, p: 1.7 },
-  { l: 'Salem, India', v: 21, p: 0.9 },
-  { l: 'Tiruvallur, India', v: 17, p: 0.7 },
-  { l: 'Kochi, India', v: 16, p: 0.7 },
-  { l: 'San Francisco Bay Area', v: 16, p: 0.7 },
-  { l: 'Greater Ahmedabad Area, India', v: 14, p: 0.6 },
-];
+export const F_LOC: LocRow[] = [];
 
 export const V_MONTHS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
 export const V_PV = [556,716,1127,836,996,544,660,638,852,1404,1137,1028,596];
