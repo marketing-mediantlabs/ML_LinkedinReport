@@ -5,8 +5,8 @@ import type { LocRow, TopPost, CompRow, AdSetRow } from '../types';
  * Apr 2025 - Jul 2026. Uploads merge on top of this; it is never wiped.
  */
 
-export const MONTHS: string[] = ['Sep 26'];
-export const F_TOT: number[] = [110];
+export const MONTHS: string[] = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26','Sep 26'];
+export const F_TOT: number[] = [126,121,39,81,231,210,300,446,507,533,646,110];
 /** Index of the first 2026 month, used to colour the bars by year. */
 export const F_YEAR_SPLIT = 0;
 /** Trailing partial month gets the orange treatment. */
@@ -19,9 +19,9 @@ export const F_CS_D: number[] = [];
 
 export const F_LOC: LocRow[] = [];
 
-export const V_MONTHS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
-export const V_PV = [556,716,1127,836,996,544,660,638,852,1404,1137,1028,596];
-export const V_UV = [214,280,393,326,404,214,243,235,328,472,466,343,184];
+export const V_MONTHS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Sep 26'];
+export const V_PV = [556,716,1127,836,996,544,660,638,852,1404,1137,1028,596,2111];
+export const V_UV = [214,280,393,326,404,214,243,235,328,472,466,343,184,711];
 
 export const V_IND_L = ['IT Services & IT Consulting','E-Learning Providers','Software Development','Technology & Internet','Education','Design Services','Graphic Design','Animation & Post-prod.','HR Services','Edu Admin Programs'];
 export const V_IND_D = [4962,3329,1507,1217,643,610,458,438,334,320];

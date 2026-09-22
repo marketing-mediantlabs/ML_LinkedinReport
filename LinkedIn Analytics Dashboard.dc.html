@@ -303,6 +303,32 @@
         <div style="position:relative;height:320px;"><canvas data-chart-id="vMonthly"></canvas></div>
       </div>
 
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Month-over-Month Comparison</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:12px;margin-bottom:20px;">
+        <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare from</div>
+          <select onChange="{{ onVisitorCompMonthAChange }}" value="{{ visitorCompResult.monthA }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+            <sc-for list="{{ visitorCompResult.months }}" as="mo" hint-placeholder-count="16">
+              <option value="{{ mo }}">{{ mo }}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare to</div>
+          <select onChange="{{ onVisitorCompMonthBChange }}" value="{{ visitorCompResult.monthB }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+            <sc-for list="{{ visitorCompResult.months }}" as="mo" hint-placeholder-count="16">
+              <option value="{{ mo }}">{{ mo }}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Result</div>
+          <div style="font-size:22px;font-weight:800;color:{{ C.tx }};line-height:1;">{{ visitorCompResult.diffText }}</div>
+          <div style="font-size:12px;font-weight:700;color:{{ visitorCompResult.pctColor }};margin-top:6px;">{{ visitorCompResult.pctText }}</div>
+          <div style="font-size:10px;color:{{ C.sub }};margin-top:6px;">{{ visitorCompResult.aVal }} → {{ visitorCompResult.bVal }}</div>
+        </div>
+      </div>
+
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Visitor Audience Profile</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px;margin-bottom:20px;">
         <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:18px 20px;">
@@ -327,7 +353,7 @@
         </div>
       </div>
 
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Top Visitor Locations</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Top Visitor Locations</span><div style="flex:1;height:1px;background:{{ C.br }};"></div><select onChange="{{ onVLocCountryChange }}" value="{{ vLocCountry }}" style="background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:5px 8px;border-radius:7px;font-size:10px;text-transform:none;letter-spacing:normal;font-weight:600;"><option value="">All countries</option><sc-for list="{{ vLocCountries }}" as="ctry" hint-placeholder-count="3"><option value="{{ ctry.name }}">{{ ctry.totalLabel }}</option></sc-for></select></div>
       <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;overflow:hidden;margin-bottom:20px;">
         <table style="width:100%;border-collapse:collapse;">
           <thead><tr>
@@ -912,17 +938,17 @@ const D25RAW=[['4/1',2],['4/21',43],['5/12',31],['6/16',28],['6/18',30],['6/27',
 const D26RAW=[['2/18',80],['3/16',94],['4/9',87],['5/22',110],['6/29',218]];
 
 const DATA={
-  MONTHS:['Sep 26'],
-  F_TOT:[110],
+  MONTHS:['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26','Sep 26'],
+  F_TOT:[126,121,39,81,231,210,300,446,507,533,646,110],
   F_CLR_BG:[],
   F_SEN_L:[],
   F_SEN_D:[],
   F_CS_L:[],
   F_CS_D:[],
   F_LOC:[],
-  V_MONTHS:['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'],
-  V_PV:[556,716,1127,836,996,544,660,638,852,1404,1137,1028,596],
-  V_UV:[214,280,393,326,404,214,243,235,328,472,466,343,184],
+  V_MONTHS:['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Sep 26'],
+  V_PV:[556,716,1127,836,996,544,660,638,852,1404,1137,1028,596,2111],
+  V_UV:[214,280,393,326,404,214,243,235,328,472,466,343,184,711],
   V_IND_L:['IT Services & IT Consulting','E-Learning Providers','Software Development','Technology & Internet','Education','Design Services','Graphic Design','Animation & Post-prod.','HR Services','Edu Admin Programs'],
   V_IND_D:[4962,3329,1507,1217,643,610,458,438,334,320],
   V_JOB_L:['Arts & Design','Education','Engineering','Human Resources','IT','Business Dev','Media & Comm.','Operations','Marketing','Project Mgmt'],
@@ -996,6 +1022,8 @@ class Component extends DCLogic {
       followerDemo:savedDemo,
       demoStatus:null,
       locCountry:'',
+      vLocCountry:'',
+      visitorCompMonthA:null, visitorCompMonthB:null,
     };
     this.chartEls={}; this.chartInstances={}; this.chartRefs={};
     CHART_IDS.forEach(id=>{ this.chartRefs[id]=(el)=>{
@@ -1022,6 +1050,9 @@ class Component extends DCLogic {
     this.onMomCompAdsBChange=(e)=>this.setState(s=>({momCompB:{...s.momCompB,ads:e.target.value}}));
     this.onUploadDemo=(e)=>this.handleDemoUpload(e.target.files[0]);
     this.onLocCountryChange=(e)=>this.setState({locCountry:e.target.value});
+    this.onVLocCountryChange=(e)=>this.setState({vLocCountry:e.target.value});
+    this.onVisitorCompMonthAChange=(e)=>this.setState({visitorCompMonthA:e.target.value});
+    this.onVisitorCompMonthBChange=(e)=>this.setState({visitorCompMonthB:e.target.value});
     this.onClearDemo=()=>{
       try{ localStorage.removeItem(LS_DEMO_KEY); }catch(e){}
       this.setState({followerDemo:null,demoStatus:{text:'Cleared — showing baseline data.',color:'#8b93b0'}},()=>this.rebuildMountedCharts(true));
@@ -1404,8 +1435,12 @@ class Component extends DCLogic {
       return null;
     }
     if(section==='visitors'){
-      const pvCol=this.findCol(headers,[/page view.*total/,/total.*page view/,/page views?$/,/page view/]);
-      const uvCol=this.findCol(headers,[/unique/]);
+      // LinkedIn's export repeats "page views"/"unique visitors" per page section
+      // (Overview/Life/Jobs/Total, each desktop/mobile/total) — the grand total
+      // column is named "total page views (total)" and must be matched before
+      // the looser patterns, or the first section's column (Overview) wins instead.
+      const pvCol=this.findCol(headers,[/^total page views? \(total\)/,/^total.*page view.*total\)/,/page view.*total/,/total.*page view/,/page views?$/,/page view/]);
+      const uvCol=this.findCol(headers,[/^total unique visitors? \(total\)/,/^total.*unique.*total\)/,/unique/]);
       const pv=sum(pvCol);
       if(!pvCol) warnings.push('Could not find page views column');
       let uv=sum(uvCol);
@@ -1468,8 +1503,8 @@ class Component extends DCLogic {
           else { warnings.push('Could not find follower columns'); }
           value={primary:total};
         } else if(section==='visitors'){
-          const pvCol=this.findCol(headers,[/page view.*total/,/total.*page view/,/page views?$/]);
-          const uvCol=this.findCol(headers,[/unique/]);
+          const pvCol=this.findCol(headers,[/^total page views? \(total\)/,/^total.*page view.*total\)/,/page view.*total/,/total.*page view/,/page views?$/]);
+          const uvCol=this.findCol(headers,[/^total unique visitors? \(total\)/,/^total.*unique.*total\)/,/unique/]);
           let pv=0,uv=0;
           if(pvCol) rows.forEach(r=>pv+=this.num(r[pvCol])); else warnings.push('Could not find page views column');
           if(uvCol) rows.forEach(r=>uv+=this.num(r[uvCol])); else { uv=Math.round(pv*0.38); warnings.push('Unique visitors estimated (~38% of views)'); }
@@ -1658,7 +1693,7 @@ class Component extends DCLogic {
     const peakLabel=(s)=>{ if(!s.labels.length) return '—'; let bi=0; s.values.forEach((v,i)=>{ if(v>s.values[bi]) bi=i; }); return s.labels[bi]; };
     const span=(s)=> s.labels.length ? (s.labels[0]+' → '+s.labels[s.labels.length-1]) : '—';
 
-    const PRE_BASE=4173;         // calibrated so Total Page Followers matches the live LinkedIn count once tracked growth is added
+    const PRE_BASE=933;          // followers from page creation (Apr 2025) to Sep 2025 — outside LinkedIn's exportable history window
     const ORGANIC_SHARE=0.970;   // organic vs auto-invited split from the LinkedIn export
 
     // Freshness stamp: the newest month any domain actually holds data for.
@@ -1684,7 +1719,7 @@ class Component extends DCLogic {
       kpi('New Followers (Tracked)',N(fTracked),span(fs),fMonths+' months','def','g'),
       kpi('Organic',N(fOrganic),(ORGANIC_SHARE*100).toFixed(1)+'% of all growth','↑ '+(ORGANIC_SHARE*100).toFixed(1)+'%','def','g'),
       kpi('Auto-Invited',N(fInvited),(100-ORGANIC_SHARE*100).toFixed(1)+'% of total',(100-ORGANIC_SHARE*100).toFixed(1)+'%','b','b'),
-      kpi('Pre-tracking Base',N(PRE_BASE),'Baseline as of Sep 22, 2026','Historical','o','b'),
+      kpi('Pre-tracking Base',N(PRE_BASE),'Followers before Oct 1, 2025','Historical','o','b'),
       kpi('Latest Month',N(fs.values.length?fs.values[fs.values.length-1]:0),fs.labels.length?fs.labels[fs.labels.length-1]:'—','Most recent','o','b'),
       kpi('Best Month',N(peak(fs.values)),peakLabel(fs),'Monthly record','b','b'),
       kpi('Monthly Avg',N(fTracked/fMonths),'Across '+fMonths+' months','Avg','p','b'),
@@ -1758,7 +1793,17 @@ class Component extends DCLogic {
       locRowsForTable=filtered.map(r=>({l:r.l,v:r.v,p:Math.round(r.v/ftotal*1000)/10}));
     }
     const fLocRowsAll=locRowsForTable.map((r,i)=>({...r,rank:i+1,rc:rankStyle(i),barW:Math.round(r.p*1.8),pLabel:r.p+'%'}));
-    const vLocRowsAll=DATA.V_LOC.map((r,i)=>({...r,rank:i+1,rc:rankStyle(i),barW:Math.round(r.p*1.2),pLabel:r.p+'%'}));
+    const vLocCountryTotals={};
+    DATA.V_LOC.forEach(r=>{ const c=this.countryOf(r.l); vLocCountryTotals[c]=(vLocCountryTotals[c]||0)+r.v; });
+    const vLocCountries=Object.keys(vLocCountryTotals).sort((a,b)=>vLocCountryTotals[b]-vLocCountryTotals[a]).map(name=>({name,totalLabel:name+' — '+vLocCountryTotals[name].toLocaleString()}));
+    const vLocCountry=this.state.vLocCountry||'';
+    let vLocRowsForTable=DATA.V_LOC;
+    if(vLocCountry){
+      const filtered=DATA.V_LOC.filter(r=>this.countryOf(r.l)===vLocCountry);
+      const ftotal=filtered.reduce((a,r)=>a+r.v,0)||1;
+      vLocRowsForTable=filtered.map(r=>({l:r.l,v:r.v,p:Math.round(r.v/ftotal*1000)/10}));
+    }
+    const vLocRowsAll=vLocRowsForTable.map((r,i)=>({...r,rank:i+1,rc:rankStyle(i),barW:Math.round(r.p*1.2),pLabel:r.p+'%'}));
     const topPostRowsAll=DATA.TOP_POSTS.map((p,i)=>({...p,rank:i+1,rc:rankStyle(i),tColor:TYPE_COLOR[p.type]||C.sub,tBg:(TYPE_COLOR[p.type]||C.sub)+'26',impr:p.impr.toLocaleString(),er:(p.eng/p.impr*100).toFixed(1)}));
     const compRowsAll=DATA.COMP.map((c,i)=>({...c,rank:i+1,rc:rankStyle(i),fLabel:c.f.toLocaleString(),rLabel:c.r.toLocaleString(),rowBg:c.highlight?C.gg:'transparent'}));
     const compTop6=compRowsAll.slice(0,6).map((c,i)=>({...c,color:RANK6[i]}));
@@ -1841,6 +1886,9 @@ class Component extends DCLogic {
     const momCompContent=buildCompare(cSeries, mCompA.content, mCompB.content);
     const momCompAds=buildCompare(aSeries, mCompA.ads, mCompB.ads, (x)=>'$'+x.toLocaleString());
 
+    // Pick-any-two-months comparison for the Visitors page itself (mirrors the Followers page picker).
+    const visitorCompResult=buildCompare(vSeries, this.state.visitorCompMonthA, this.state.visitorCompMonthB);
+
     // Pick-any-two-months comparison for the Followers page (left = from, middle = to, right = result).
     const followerCompMonths=fSeries.labels;
     const compMonthA=this.state.compMonthA || (followerCompMonths.length>1?followerCompMonths[followerCompMonths.length-2]:followerCompMonths[0]) || '';
@@ -1919,6 +1967,8 @@ class Component extends DCLogic {
       demoStatus:this.state.demoStatus||{text:'No file uploaded yet this session.',color:C.sub},
       hasDemoData:!!this.state.followerDemo,
       locCountries, locCountry, onLocCountryChange:this.onLocCountryChange,
+      vLocCountries, vLocCountry, onVLocCountryChange:this.onVLocCountryChange,
+      visitorCompResult, onVisitorCompMonthAChange:this.onVisitorCompMonthAChange, onVisitorCompMonthBChange:this.onVisitorCompMonthBChange,
       momFollowersRows, momVisitorsRows, momContentRows, momAdsRows,
       followerCompMonths, compMonthA, compMonthB, onCompMonthAChange:this.onCompMonthAChange, onCompMonthBChange:this.onCompMonthBChange, followerCompResult,
       momCompFollowers, momCompVisitors, momCompContent, momCompAds,

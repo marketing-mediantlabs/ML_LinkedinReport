@@ -948,8 +948,8 @@ class Component extends DCLogic {
           else { warnings.push('Could not find follower columns'); }
           value={primary:total};
         } else if(section==='visitors'){
-          const pvCol=this.findCol(headers,[/page view.*total/,/total.*page view/,/page views?$/]);
-          const uvCol=this.findCol(headers,[/unique/]);
+          const pvCol=this.findCol(headers,[/^total page views? \(total\)/,/^total.*page view.*total\)/,/page view.*total/,/total.*page view/,/page views?$/]);
+          const uvCol=this.findCol(headers,[/^total unique visitors? \(total\)/,/^total.*unique.*total\)/,/unique/]);
           let pv=0,uv=0;
           if(pvCol) rows.forEach(r=>pv+=this.num(r[pvCol])); else warnings.push('Could not find page views column');
           if(uvCol) rows.forEach(r=>uv+=this.num(r[uvCol])); else { uv=Math.round(pv*0.38); warnings.push('Unique visitors estimated (~38% of views)'); }

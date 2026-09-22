@@ -105,8 +105,8 @@ export async function parseUpload(section: SectionId, file: File): Promise<Parse
     else warnings.push('Could not find organic/sponsored/total follower columns');
     value = { primary, secondary: sum(rows, org), meta };
   } else if (section === 'visitors') {
-    const pv = findCol(headers, [/page view.*total/, /total.*page view/, /page views?$/, /page view/]);
-    const uv = findCol(headers, [/unique/]);
+    const pv = findCol(headers, [/^total page views? \(total\)/, /^total.*page view.*total\)/, /page view.*total/, /total.*page view/, /page views?$/, /page view/]);
+    const uv = findCol(headers, [/^total unique visitors? \(total\)/, /^total.*unique.*total\)/, /unique/]);
     const pageViews = sum(rows, pv);
     if (!pv) warnings.push('Could not find page views column');
     let unique = sum(rows, uv);
