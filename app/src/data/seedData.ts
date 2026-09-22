@@ -102,16 +102,16 @@ export const TOP_POSTS: TopPost[] = [
 ];
 
 export const COMP: CompRow[] = [
-  { n: 'Novac Technology', f: 58571, p: 255, c: 150, r: 20595 },
-  { n: 'GP Strategies', f: 45828, p: 350, c: 199, r: 8517 },
-  { n: 'Infopro Learning', f: 16306, p: 466, c: 236, r: 7202 },
-  { n: 'SweetRush', f: 7028, p: 303, c: 273, r: 4366 },
-  { n: 'ELB Learning', f: 2900, p: 524, c: 232, r: 3995 },
-  { n: 'Mediant Labs ✦', f: 2583, p: 123, c: 195, r: 3665, highlight: true },
-  { n: 'Upside Learning', f: 970, p: 241, c: 88, r: 2827 },
-  { n: 'Apposite', f: 770, p: 379, c: 287, r: 4531 },
-  { n: 'Learning Tech Group', f: 755, p: 4, c: 0, r: 0 },
-  { n: 'Evo11ve.ai', f: 662, p: 36, c: 9, r: 216 },
+  { n: 'Novac Technology', f: 55729, p: 228, c: 103, r: 21809 },
+  { n: 'GP Strategies', f: 51111, p: 327, c: 266, r: 9465 },
+  { n: 'Infopro Learning', f: 14367, p: 424, c: 220, r: 7048 },
+  { n: 'SweetRush', f: 6774, p: 289, c: 265, r: 4445 },
+  { n: 'Mediant Labs ✦', f: 3371, p: 139, c: 233, r: 4670, highlight: true },
+  { n: 'ELB Learning', f: 2754, p: 431, c: 238, r: 3554 },
+  { n: 'Upside Learning', f: 1015, p: 237, c: 65, r: 2912 },
+  { n: 'Learning Tech Group', f: 814, p: 0, c: 0, r: 0 },
+  { n: 'Apposite', f: 727, p: 376, c: 228, r: 4547 },
+  { n: 'Evo11ve.ai', f: 379, p: 57, c: 10, r: 147 },
 ];
 
 export const ADS_CAMP = ['Pilot Oct 25','ML Boost Video','HASQ TOF Apr 26','HASQ MOF May 26','Boost May 26'];
