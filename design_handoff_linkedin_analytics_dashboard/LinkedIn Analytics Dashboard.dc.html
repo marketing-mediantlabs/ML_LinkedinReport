@@ -941,9 +941,9 @@ class Component extends DCLogic {
         const warnings=[];
         let value={};
         if(section==='followers'){
-          const orgCol=this.findCol(headers,[/organic/]); const spCol=this.findCol(headers,[/sponsor/]); const newCol=this.findCol(headers,[/new follower/]);
+          const orgCol=this.findCol(headers,[/organic/]); const spCol=this.findCol(headers,[/sponsor/]); const autoCol=this.findCol(headers,[/auto.?invit/]); const newCol=this.findCol(headers,[/new follower/]);
           let total=0;
-          if(orgCol||spCol){ rows.forEach(r=>{ total+=this.num(r[orgCol])+this.num(r[spCol]); }); }
+          if(orgCol||spCol||autoCol){ rows.forEach(r=>{ total+=this.num(r[orgCol])+this.num(r[spCol])+this.num(r[autoCol]); }); }
           else if(newCol){ rows.forEach(r=>{ total+=this.num(r[newCol]); }); }
           else { warnings.push('Could not find follower columns'); }
           value={primary:total};

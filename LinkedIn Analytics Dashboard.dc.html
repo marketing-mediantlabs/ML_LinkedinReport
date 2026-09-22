@@ -1180,6 +1180,26 @@ class Component extends DCLogic {
     return null;
   }
 
+  /**
+   * LinkedIn's Followers report can export as PDF in the same one-row-per-day
+   * table as the CSV (Date, Sponsored, Organic, Auto-invited, Total), not just
+   * a narrative "Total followers: 1,234" summary. metricFromText finds the
+   * first number near a label — on a table PDF that's a date fragment or a
+   * single day's figure, not the total. Detect the table and, if found,
+   * return CSV-shaped {rows,headers} so it can reuse the same month-bucketing
+   * and summing as a real CSV upload. Returns null when the PDF isn't this format.
+   */
+  parseFollowersPdfTable(text){
+    const re=/(\d{1,2}\/\d{1,2}\/\d{4})\s+(-?[\d,]+)\s+(-?[\d,]+)\s+(-?[\d,]+)\s+(-?[\d,]+)/g;
+    const headers=['Date','Sponsored followers','Organic followers','Auto-invited followers','Total followers'];
+    const rows=[]; let m;
+    while((m=re.exec(text))){
+      rows.push({Date:m[1],'Sponsored followers':m[2],'Organic followers':m[3],'Auto-invited followers':m[4],'Total followers':m[5]});
+    }
+    if(rows.length<2) return null;
+    return {rows,headers};
+  }
+
   handlePdfUpload(section,file){
     if(!window.pdfjsLib){ this.setUploadStatus(section,'PDF reader still loading — try again in a moment.',true); return; }
     this.setUploadStatus(section,'Reading '+file.name+'…',false);
@@ -1201,16 +1221,38 @@ class Component extends DCLogic {
       text=text.replace(/\s+/g,' ');
       if(!text.trim()){ this.setUploadStatus(section,'That PDF has no extractable text (it may be a scan).',true); return; }
 
-      const label=this.detectMonthFromText(text) || (MONTH_ABBR[new Date().getMonth()]+' '+String(new Date().getFullYear()).slice(2));
+      let label=this.detectMonthFromText(text) || (MONTH_ABBR[new Date().getMonth()]+' '+String(new Date().getFullYear()).slice(2));
       const warnings=[]; let value={};
 
       if(section==='followers'){
-        const total=this.metricFromText(text,['total followers?','new followers?','follower gain']);
-        const org=this.metricFromText(text,['organic followers?','organic']);
-        const spon=this.metricFromText(text,['sponsored followers?','sponsored']);
-        const primary = total!=null?total : ((org||0)+(spon||0));
-        if(!primary) warnings.push('No follower total found in the PDF text');
-        value={primary,secondary:org||0};
+        const tbl=this.parseFollowersPdfTable(text);
+        if(tbl){
+          const grouped=this.groupRowsByMonth(tbl.rows,'Date');
+          if(grouped && grouped.labels.length>1){
+            const probeWarnings=[];
+            const entries=grouped.labels.map(lbl=>({
+              label:lbl,
+              value:this.extractValue('followers',grouped.buckets[lbl],tbl.headers,[]),
+            })).filter(e=>e.value);
+            if(!entries.length) probeWarnings.push('Could not find the expected columns — nothing to save');
+            this.setState({pendingUpload:{
+              section, file:file.name, multi:true, entries, warnings:probeWarnings,
+              label:grouped.labels.length+' months ('+grouped.labels[0]+' – '+grouped.labels[grouped.labels.length-1]+')',
+              value:{},
+            }});
+            this.setUploadStatus(section,'Found '+grouped.labels.length+' months — check the figures below, then confirm.',probeWarnings.length>0);
+            return;
+          }
+          if(grouped && grouped.labels[0]) label=grouped.labels[0];
+          value=this.extractValue('followers',tbl.rows,tbl.headers,warnings) || {primary:0};
+        } else {
+          const total=this.metricFromText(text,['total followers?','new followers?','follower gain']);
+          const org=this.metricFromText(text,['organic followers?','organic']);
+          const spon=this.metricFromText(text,['sponsored followers?','sponsored']);
+          const primary = total!=null?total : ((org||0)+(spon||0));
+          if(!primary) warnings.push('No follower total found in the PDF text');
+          value={primary,secondary:org||0};
+        }
       } else if(section==='visitors'){
         const pv=this.metricFromText(text,['total page views?','page views?','all page views?']);
         const uv=this.metricFromText(text,['total unique visitors?','unique visitors?','unique']);
@@ -1307,8 +1349,9 @@ class Component extends DCLogic {
     if(section==='followers'){
       const orgCol=this.findCol(headers,[/organic/]);
       const spCol=this.findCol(headers,[/sponsor/]);
+      const autoCol=this.findCol(headers,[/auto.?invit/]);
       const newCol=this.findCol(headers,[/new follower/,/total follower/]);
-      if(orgCol||spCol) return {primary:sum(orgCol)+sum(spCol), secondary:sum(orgCol)};
+      if(orgCol||spCol||autoCol) return {primary:sum(orgCol)+sum(spCol)+sum(autoCol), secondary:sum(orgCol)};
       if(newCol) return {primary:sum(newCol)};
       warnings.push('Could not find follower columns');
       return null;
@@ -1371,9 +1414,9 @@ class Component extends DCLogic {
         const warnings=[];
         let value={};
         if(section==='followers'){
-          const orgCol=this.findCol(headers,[/organic/]); const spCol=this.findCol(headers,[/sponsor/]); const newCol=this.findCol(headers,[/new follower/]);
+          const orgCol=this.findCol(headers,[/organic/]); const spCol=this.findCol(headers,[/sponsor/]); const autoCol=this.findCol(headers,[/auto.?invit/]); const newCol=this.findCol(headers,[/new follower/]);
           let total=0;
-          if(orgCol||spCol){ rows.forEach(r=>{ total+=this.num(r[orgCol])+this.num(r[spCol]); }); }
+          if(orgCol||spCol||autoCol){ rows.forEach(r=>{ total+=this.num(r[orgCol])+this.num(r[spCol])+this.num(r[autoCol]); }); }
           else if(newCol){ rows.forEach(r=>{ total+=this.num(r[newCol]); }); }
           else { warnings.push('Could not find follower columns'); }
           value={primary:total};

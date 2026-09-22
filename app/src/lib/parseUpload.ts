@@ -97,9 +97,10 @@ export async function parseUpload(section: SectionId, file: File): Promise<Parse
   if (section === 'followers') {
     const org = findCol(headers, [/organic/]);
     const spon = findCol(headers, [/sponsor/]);
+    const auto = findCol(headers, [/auto.?invit/]);
     const total = findCol(headers, [/total follower/, /new follower/]);
     let primary = 0;
-    if (org || spon) primary = sum(rows, org) + sum(rows, spon);
+    if (org || spon || auto) primary = sum(rows, org) + sum(rows, spon) + sum(rows, auto);
     else if (total) primary = sum(rows, total);
     else warnings.push('Could not find organic/sponsored/total follower columns');
     value = { primary, secondary: sum(rows, org), meta };
