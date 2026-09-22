@@ -1010,7 +1010,12 @@ class Component extends DCLogic {
       if(idx>=0){ values[idx]=val.primary; if(values2) values2[idx]=val.secondary!=null?val.secondary:values2[idx]; }
       else { labels.push(lbl); values.push(val.primary||0); if(values2) values2.push(val.secondary||0); }
     });
-    return {labels,values,values2};
+    const order=labels.map((l,i)=>i).sort((a,b)=>this.sortKey(labels[a])-this.sortKey(labels[b]));
+    return {
+      labels:order.map(i=>labels[i]),
+      values:order.map(i=>values[i]),
+      values2:values2?order.map(i=>values2[i]):null,
+    };
   }
 
   mk(id,cfg){
