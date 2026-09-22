@@ -102,6 +102,43 @@
         <div style="position:relative;height:320px;"><canvas ref="{{ refs.monthlyFollowers }}"></canvas></div>
       </div>
 
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Month-over-Month Comparison</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:12px;margin-bottom:20px;">
+        <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare from</div>
+          <select onChange="{{ onCompMonthAChange }}" value="{{ compMonthA }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+            <sc-for list="{{ followerCompMonths }}" as="mo" hint-placeholder-count="16">
+              <option value="{{ mo }}">{{ mo }}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare to</div>
+          <select onChange="{{ onCompMonthBChange }}" value="{{ compMonthB }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+            <sc-for list="{{ followerCompMonths }}" as="mo" hint-placeholder-count="16">
+              <option value="{{ mo }}">{{ mo }}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Result</div>
+          <div style="font-size:22px;font-weight:800;color:{{ C.tx }};line-height:1;">{{ followerCompResult.diffText }}</div>
+          <div style="font-size:12px;font-weight:700;color:{{ followerCompResult.pctColor }};margin-top:6px;">{{ followerCompResult.pctText }}</div>
+          <div style="font-size:10px;color:{{ C.sub }};margin-top:6px;">{{ followerCompResult.aVal }} → {{ followerCompResult.bVal }}</div>
+        </div>
+      </div>
+
+      <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;overflow:hidden;margin-bottom:20px;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr><th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:{{ C.sub }};padding:8px 16px;text-align:left;background:{{ C.s2 }};">Month</th><th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:{{ C.sub }};padding:8px 16px;text-align:left;background:{{ C.s2 }};">New Followers</th><th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:{{ C.sub }};padding:8px 16px;text-align:left;background:{{ C.s2 }};">vs Prior Month</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ momFollowersRows }}" as="row" hint-placeholder-count="10">
+              <tr><td style="padding:8px 16px;font-size:11px;border-top:1px solid {{ C.br }};color:{{ C.tx }};">{{ row.label }}</td><td style="padding:8px 16px;font-size:11px;border-top:1px solid {{ C.br }};color:{{ C.tx }};font-weight:700;">{{ row.valueLabel }}</td><td style="padding:8px 16px;font-size:11px;border-top:1px solid {{ C.br }};color:{{ row.deltaColor }};font-weight:600;">{{ row.deltaText }}</td></tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Follower Audience Profile</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px;margin-bottom:20px;">
         <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:18px 20px;">
@@ -653,8 +690,8 @@ const D25RAW=[['4/1',2],['4/21',43],['5/12',31],['6/16',28],['6/18',30],['6/27',
 const D26RAW=[['2/18',80],['3/16',94],['4/9',87],['5/22',110],['6/29',218]];
 
 const DATA={
-  MONTHS:['Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'],
-  F_TOT:[67,83,153,119,132,173,128,122,39,83,231,216,300,445,510,144],
+  MONTHS:['Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26'],
+  F_TOT:[67,83,153,119,132,173,128,122,39,83,231,216,300,445,510,144,646],
   F_CLR_BG:['rgba(33,168,102,.75)','rgba(33,168,102,.75)','rgba(33,168,102,.75)','rgba(33,168,102,.75)','rgba(33,168,102,.75)','rgba(33,168,102,.75)','rgba(33,168,102,.75)','rgba(33,168,102,.75)','rgba(33,168,102,.75)','rgba(33,137,189,.75)','rgba(33,137,189,.75)','rgba(33,137,189,.75)','rgba(33,137,189,.75)','rgba(33,137,189,.75)','rgba(33,137,189,.75)','rgba(224,123,42,.75)'],
   F_SEN_L:['Senior','Entry','Manager','Director','Training','VP','Owner','CXO','Partner'],
   F_SEN_D:[802,791,106,103,45,42,27,18,6],
@@ -726,6 +763,7 @@ class Component extends DCLogic {
     try{ const raw=localStorage.getItem(LS_KEY); if(raw){ const parsed=JSON.parse(raw); Object.assign(savedUploads,parsed); } }catch(e){}
     this.state={
       activeTab:'followers', isDark:true, viewMode:'all', selectedMonth:null,
+      compMonthA:null, compMonthB:null,
       searchTerms:{followers:'',visitors:'',content:'',ads:'',competitors:''},
       uploads:savedUploads,
       uploadStatus:{followers:null,visitors:null,content:null,ads:null,competitors:null},
@@ -741,6 +779,8 @@ class Component extends DCLogic {
     this.onSetAllTime=()=>this.setState({viewMode:'all'});
     this.onSetThisMonth=()=>this.setState({viewMode:'month'});
     this.onMonthChange=(e)=>this.setState({selectedMonth:e.target.value});
+    this.onCompMonthAChange=(e)=>this.setState({compMonthA:e.target.value});
+    this.onCompMonthBChange=(e)=>this.setState({compMonthB:e.target.value});
     this.onSearchFollowers=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,followers:e.target.value}}));
     this.onSearchVisitors=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,visitors:e.target.value}}));
     this.onSearchContent=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,content:e.target.value}}));
@@ -1044,6 +1084,23 @@ class Component extends DCLogic {
     const momContentRows=momRows(cSeries);
     const momAdsRows=momRows(aSeries,(x)=>'$'+x.toLocaleString());
 
+    // Pick-any-two-months comparison for the Followers page (left = from, middle = to, right = result).
+    const followerCompMonths=fSeries.labels;
+    const compMonthA=this.state.compMonthA || (followerCompMonths.length>1?followerCompMonths[followerCompMonths.length-2]:followerCompMonths[0]) || '';
+    const compMonthB=this.state.compMonthB || followerCompMonths[followerCompMonths.length-1] || '';
+    const compIdxA=followerCompMonths.indexOf(compMonthA), compIdxB=followerCompMonths.indexOf(compMonthB);
+    const compValA=compIdxA>=0?fSeries.values[compIdxA]:null, compValB=compIdxB>=0?fSeries.values[compIdxB]:null;
+    const compDiff=(compValA!=null&&compValB!=null)?(compValB-compValA):null;
+    const compPct=(compDiff!=null&&compValA)?(compDiff/compValA*100):null;
+    const compUp=compPct!=null&&compPct>=0;
+    const followerCompResult={
+      aVal:compValA!=null?compValA.toLocaleString():'—',
+      bVal:compValB!=null?compValB.toLocaleString():'—',
+      diffText:compDiff==null?'—':(compDiff>=0?'+':'')+compDiff.toLocaleString(),
+      pctText:compPct==null?'No % change available':(compUp?'↑ ':'↓ ')+Math.abs(compPct).toFixed(1)+'%',
+      pctColor:compPct==null?C.sub:(compUp?'#21a866':'#e74c3c'),
+    };
+
     const compUploads=this.state.uploads.competitors||{};
     const compHistLabels=Object.keys(compUploads).sort((a,b)=>this.sortKey(a)-this.sortKey(b));
     const competitorHistory=compHistLabels.map(lbl=>{
@@ -1070,6 +1127,7 @@ class Component extends DCLogic {
       onUploadFollowers:this.onUploadFollowers, onUploadVisitors:this.onUploadVisitors, onUploadContent:this.onUploadContent, onUploadAds:this.onUploadAds, onUploadCompetitors:this.onUploadCompetitors,
       followerStatus, visitorStatus, contentStatus, adStatus, competitorStatus,
       momFollowersRows, momVisitorsRows, momContentRows, momAdsRows,
+      followerCompMonths, compMonthA, compMonthB, onCompMonthAChange:this.onCompMonthAChange, onCompMonthBChange:this.onCompMonthBChange, followerCompResult,
       hasCompetitorHistory: competitorHistory.length>0, competitorHistory,
     };
   }

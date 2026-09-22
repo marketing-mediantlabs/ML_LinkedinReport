@@ -5,8 +5,8 @@ import type { LocRow, TopPost, CompRow, AdSetRow } from '../types';
  * Apr 2025 - Jul 2026. Uploads merge on top of this; it is never wiped.
  */
 
-export const MONTHS = ['Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
-export const F_TOT = [67,83,153,119,132,173,128,122,39,83,231,216,300,445,510,144];
+export const MONTHS = ['Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Aug 26'];
+export const F_TOT = [67,83,153,119,132,173,128,122,39,83,231,216,300,445,510,144,646];
 /** Index of the first 2026 month, used to colour the bars by year. */
 export const F_YEAR_SPLIT = 9;
 /** Trailing partial month gets the orange treatment. */

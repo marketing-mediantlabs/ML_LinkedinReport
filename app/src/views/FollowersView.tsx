@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import * as D from '../data/seedData';
 import * as CFG from '../charts/configs';
 import { getSeries } from '../lib/series';
-import { int } from '../lib/format';
+import { int, delta, deltaClass } from '../lib/format';
 import { PageHead, Rule, ChartCard, KpiGrid, type Kpi } from '../components/Primitives';
 import { ChartCanvas } from '../components/ChartCanvas';
 import { TableCard, Rank, BarCell, EmptyRow } from '../components/Tables';
@@ -35,6 +35,18 @@ export function FollowersView(ctx: ViewCtx) {
   const p = pick(series, ctx.selectedMonth);
   if (p) snap.push({ label: 'New Followers — ' + ctx.selectedMonth, value: p.value, prior: p.prior, format: int });
 
+  const [monthA, setMonthA] = useState<string>('');
+  const [monthB, setMonthB] = useState<string>('');
+  const compMonthA = monthA || (series.labels.length > 1 ? series.labels[series.labels.length - 2] : series.labels[0]) || '';
+  const compMonthB = monthB || series.labels[series.labels.length - 1] || '';
+  const idxA = series.labels.indexOf(compMonthA);
+  const idxB = series.labels.indexOf(compMonthB);
+  const valA = idxA >= 0 ? series.values[idxA] : null;
+  const valB = idxB >= 0 ? series.values[idxB] : null;
+  const diff = valA != null && valB != null ? valB - valA : null;
+  const pctChange = diff != null && valA ? (diff / valA) * 100 : null;
+  const compUp = pctChange != null && pctChange >= 0;
+
   return (
     <div data-screen-label="Followers">
       <PageHead
@@ -58,6 +70,53 @@ export function FollowersView(ctx: ViewCtx) {
           <ChartCanvas config={chart} height="lg" summary={'Monthly new followers from ' + series.labels[0] + ' to ' + series.labels[series.labels.length - 1] + ', peaking at ' + int(Math.max(...series.values)) + '.'} />
         </ChartCard>
       </div>
+
+      <Rule>Month-over-Month Comparison</Rule>
+      <div className="grid grid--compare">
+        <div className="kpi">
+          <div className="kpi__label">Compare from</div>
+          <select className="control" style={{ width: '100%' }} value={compMonthA} onChange={(e) => setMonthA(e.target.value)}>
+            {series.labels.map((m) => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="kpi">
+          <div className="kpi__label">Compare to</div>
+          <select className="control" style={{ width: '100%' }} value={compMonthB} onChange={(e) => setMonthB(e.target.value)}>
+            {series.labels.map((m) => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="kpi">
+          <div className="kpi__label">Result</div>
+          <div className="kpi__value">{diff == null ? '—' : (diff >= 0 ? '+' : '') + int(diff)}</div>
+          <div className={'delta ' + (pctChange == null ? 'delta--none' : compUp ? 'delta--up' : 'delta--down')}>
+            {pctChange == null ? 'No % change available' : (compUp ? '↑ ' : '↓ ') + Math.abs(pctChange).toFixed(1) + '%'}
+          </div>
+          <div className="kpi__sub">{valA == null ? '—' : int(valA)} → {valB == null ? '—' : int(valB)}</div>
+        </div>
+      </div>
+
+      <TableCard title="New Followers — month over month" caption="Newest month first · change calculated against the prior month">
+        <thead>
+          <tr>
+            <th scope="col">Month</th>
+            <th scope="col">New Followers</th>
+            <th scope="col">vs Prior Month</th>
+          </tr>
+        </thead>
+        <tbody>
+          {series.labels.map((label, i) => {
+            const value = series.values[i];
+            const d = delta(value, i > 0 ? series.values[i - 1] : null, true);
+            return (
+              <tr key={label}>
+                <td>{label}</td>
+                <td className="td--strong">{int(value)}</td>
+                <td className={deltaClass(d)} style={{ marginTop: 0 }}>{d.text}</td>
+              </tr>
+            );
+          }).reverse()}
+        </tbody>
+      </TableCard>
 
       <Rule>Follower Audience Profile</Rule>
       <div className="grid grid--charts">
