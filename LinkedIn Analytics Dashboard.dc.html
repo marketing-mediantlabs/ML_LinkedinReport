@@ -1188,16 +1188,39 @@ class Component extends DCLogic {
    * single day's figure, not the total. Detect the table and, if found,
    * return CSV-shaped {rows,headers} so it can reuse the same month-bucketing
    * and summing as a real CSV upload. Returns null when the PDF isn't this format.
+   *
+   * pdf.js's getTextContent() doesn't guarantee reading order for a table —
+   * cells can come out row-major (date, then that row's 4 numbers, repeat) or
+   * column-major (all dates, then the whole Sponsored column, then Organic,
+   * etc.), depending on how the source PDF was generated. Rather than assume
+   * one, extract the raw date tokens and number tokens separately and try
+   * both layouts, picking whichever makes Total = Sponsored+Organic+Auto for
+   * (almost) every row — that arithmetic identity always holds in a real
+   * export, so it's a reliable self-check for which layout is correct.
    */
   parseFollowersPdfTable(text){
-    const re=/(\d{1,2}\/\d{1,2}\/\d{4})\s+(-?[\d,]+)\s+(-?[\d,]+)\s+(-?[\d,]+)\s+(-?[\d,]+)/g;
-    const headers=['Date','Sponsored followers','Organic followers','Auto-invited followers','Total followers'];
-    const rows=[]; let m;
-    while((m=re.exec(text))){
-      rows.push({Date:m[1],'Sponsored followers':m[2],'Organic followers':m[3],'Auto-invited followers':m[4],'Total followers':m[5]});
+    const tokenRe=/(\d{1,2}\/\d{1,2}\/\d{4})|(-?\d[\d,]*(?:\.\d+)?)/g;
+    const dates=[]; const nums=[]; let tm;
+    while((tm=tokenRe.exec(text))){
+      if(tm[1]!==undefined) dates.push(tm[1]); else nums.push(tm[2]);
     }
-    if(rows.length<2) return null;
-    return {rows,headers};
+    const n=dates.length;
+    if(n<2 || nums.length<n*4) return null;
+    const headers=['Date','Sponsored followers','Organic followers','Auto-invited followers','Total followers'];
+    const build=(get)=>dates.map((d,i)=>({Date:d,'Sponsored followers':get(i,0),'Organic followers':get(i,1),'Auto-invited followers':get(i,2),'Total followers':get(i,3)}));
+    const isValid=(rows)=>{
+      let ok=0;
+      rows.forEach(r=>{
+        const sum=this.num(r['Sponsored followers'])+this.num(r['Organic followers'])+this.num(r['Auto-invited followers']);
+        if(sum===this.num(r['Total followers'])) ok++;
+      });
+      return ok>=Math.ceil(rows.length*0.8);
+    };
+    const rowMajor=build((i,c)=>nums[i*4+c]);
+    if(isValid(rowMajor)) return {rows:rowMajor,headers};
+    const colMajor=build((i,c)=>nums[c*n+i]);
+    if(isValid(colMajor)) return {rows:colMajor,headers};
+    return null;
   }
 
   handlePdfUpload(section,file){
