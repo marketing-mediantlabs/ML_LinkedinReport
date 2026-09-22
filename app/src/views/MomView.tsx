@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import * as CFG from '../charts/configs';
 import { getSeries } from '../lib/series';
 import { int, usd, delta, deltaClass } from '../lib/format';
@@ -31,9 +31,43 @@ function MomSection({ spec, series, isDark }: { spec: SectionSpec; series: Serie
     return { label, value: spec.format(value), d };
   }).reverse();
 
+  const [monthA, setMonthA] = useState<string>('');
+  const [monthB, setMonthB] = useState<string>('');
+  const compMonthA = monthA || (series.labels.length > 1 ? series.labels[series.labels.length - 2] : series.labels[0]) || '';
+  const compMonthB = monthB || series.labels[series.labels.length - 1] || '';
+  const idxA = series.labels.indexOf(compMonthA);
+  const idxB = series.labels.indexOf(compMonthB);
+  const valA = idxA >= 0 ? series.values[idxA] : null;
+  const valB = idxB >= 0 ? series.values[idxB] : null;
+  const diff = valA != null && valB != null ? valB - valA : null;
+  const pctChange = diff != null && valA ? (diff / valA) * 100 : null;
+  const compUp = pctChange != null && pctChange >= 0;
+
   return (
     <div className="mom-section">
       <Rule>{spec.rule}</Rule>
+      <div className="grid grid--compare">
+        <div className="kpi">
+          <div className="kpi__label">Compare from</div>
+          <select className="control" style={{ width: '100%' }} value={compMonthA} onChange={(e) => setMonthA(e.target.value)}>
+            {series.labels.map((m) => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="kpi">
+          <div className="kpi__label">Compare to</div>
+          <select className="control" style={{ width: '100%' }} value={compMonthB} onChange={(e) => setMonthB(e.target.value)}>
+            {series.labels.map((m) => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="kpi">
+          <div className="kpi__label">Result</div>
+          <div className="kpi__value">{diff == null ? '—' : (diff >= 0 ? '+' : '-') + spec.format(Math.abs(diff))}</div>
+          <div className={'delta ' + (pctChange == null ? 'delta--none' : compUp ? 'delta--up' : 'delta--down')}>
+            {pctChange == null ? 'No % change available' : (compUp ? '↑ ' : '↓ ') + Math.abs(pctChange).toFixed(1) + '%'}
+          </div>
+          <div className="kpi__sub">{valA == null ? '—' : spec.format(valA)} → {valB == null ? '—' : spec.format(valB)}</div>
+        </div>
+      </div>
       <div style={{ marginBottom: 14 }}>
         <ChartCard title={spec.metric + ' by month'} caption="Bars compare discrete months · uploads merge into this series automatically">
           <ChartCanvas config={config} height="sm" summary={spec.metric + ' per month from ' + series.labels[0] + ' to ' + series.labels[series.labels.length - 1] + '.'} />

@@ -600,6 +600,26 @@
 
       <div style="margin-bottom:28px;">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Followers — New Followers per Month</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:12px;margin-bottom:14px;">
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare from</div>
+            <select onChange="{{ onMomCompFollowersAChange }}" value="{{ momCompFollowers.monthA }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+              <sc-for list="{{ momCompFollowers.months }}" as="mo" hint-placeholder-count="16"><option value="{{ mo }}">{{ mo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare to</div>
+            <select onChange="{{ onMomCompFollowersBChange }}" value="{{ momCompFollowers.monthB }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+              <sc-for list="{{ momCompFollowers.months }}" as="mo" hint-placeholder-count="16"><option value="{{ mo }}">{{ mo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Result</div>
+            <div style="font-size:22px;font-weight:800;color:{{ C.tx }};line-height:1;">{{ momCompFollowers.diffText }}</div>
+            <div style="font-size:12px;font-weight:700;color:{{ momCompFollowers.pctColor }};margin-top:6px;">{{ momCompFollowers.pctText }}</div>
+            <div style="font-size:10px;color:{{ C.sub }};margin-top:6px;">{{ momCompFollowers.aVal }} → {{ momCompFollowers.bVal }}</div>
+          </div>
+        </div>
         <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:18px 20px;margin-bottom:14px;">
           <div style="position:relative;height:240px;"><canvas ref="{{ refs.momFollowers }}"></canvas></div>
         </div>
@@ -617,6 +637,26 @@
 
       <div style="margin-bottom:28px;">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Visitors — Page Views per Month</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:12px;margin-bottom:14px;">
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare from</div>
+            <select onChange="{{ onMomCompVisitorsAChange }}" value="{{ momCompVisitors.monthA }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+              <sc-for list="{{ momCompVisitors.months }}" as="mo" hint-placeholder-count="16"><option value="{{ mo }}">{{ mo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare to</div>
+            <select onChange="{{ onMomCompVisitorsBChange }}" value="{{ momCompVisitors.monthB }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+              <sc-for list="{{ momCompVisitors.months }}" as="mo" hint-placeholder-count="16"><option value="{{ mo }}">{{ mo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Result</div>
+            <div style="font-size:22px;font-weight:800;color:{{ C.tx }};line-height:1;">{{ momCompVisitors.diffText }}</div>
+            <div style="font-size:12px;font-weight:700;color:{{ momCompVisitors.pctColor }};margin-top:6px;">{{ momCompVisitors.pctText }}</div>
+            <div style="font-size:10px;color:{{ C.sub }};margin-top:6px;">{{ momCompVisitors.aVal }} → {{ momCompVisitors.bVal }}</div>
+          </div>
+        </div>
         <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:18px 20px;margin-bottom:14px;">
           <div style="position:relative;height:240px;"><canvas ref="{{ refs.momVisitors }}"></canvas></div>
         </div>
@@ -634,6 +674,26 @@
 
       <div style="margin-bottom:28px;">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Content — Impressions per Month</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:12px;margin-bottom:14px;">
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare from</div>
+            <select onChange="{{ onMomCompContentAChange }}" value="{{ momCompContent.monthA }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+              <sc-for list="{{ momCompContent.months }}" as="mo" hint-placeholder-count="16"><option value="{{ mo }}">{{ mo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare to</div>
+            <select onChange="{{ onMomCompContentBChange }}" value="{{ momCompContent.monthB }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+              <sc-for list="{{ momCompContent.months }}" as="mo" hint-placeholder-count="16"><option value="{{ mo }}">{{ mo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Result</div>
+            <div style="font-size:22px;font-weight:800;color:{{ C.tx }};line-height:1;">{{ momCompContent.diffText }}</div>
+            <div style="font-size:12px;font-weight:700;color:{{ momCompContent.pctColor }};margin-top:6px;">{{ momCompContent.pctText }}</div>
+            <div style="font-size:10px;color:{{ C.sub }};margin-top:6px;">{{ momCompContent.aVal }} → {{ momCompContent.bVal }}</div>
+          </div>
+        </div>
         <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:18px 20px;margin-bottom:14px;">
           <div style="position:relative;height:240px;"><canvas ref="{{ refs.momContent }}"></canvas></div>
         </div>
@@ -651,6 +711,26 @@
 
       <div style="margin-bottom:28px;">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Ads — Spend per Month</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:12px;margin-bottom:14px;">
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare from</div>
+            <select onChange="{{ onMomCompAdsAChange }}" value="{{ momCompAds.monthA }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+              <sc-for list="{{ momCompAds.months }}" as="mo" hint-placeholder-count="16"><option value="{{ mo }}">{{ mo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Compare to</div>
+            <select onChange="{{ onMomCompAdsBChange }}" value="{{ momCompAds.monthB }}" style="width:100%;background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 10px;border-radius:8px;font-size:12px;">
+              <sc-for list="{{ momCompAds.months }}" as="mo" hint-placeholder-count="16"><option value="{{ mo }}">{{ mo }}</option></sc-for>
+            </select>
+          </div>
+          <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:16px 18px;">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{{ C.sub }};margin-bottom:8px;">Result</div>
+            <div style="font-size:22px;font-weight:800;color:{{ C.tx }};line-height:1;">{{ momCompAds.diffText }}</div>
+            <div style="font-size:12px;font-weight:700;color:{{ momCompAds.pctColor }};margin-top:6px;">{{ momCompAds.pctText }}</div>
+            <div style="font-size:10px;color:{{ C.sub }};margin-top:6px;">{{ momCompAds.aVal }} → {{ momCompAds.bVal }}</div>
+          </div>
+        </div>
         <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;padding:18px 20px;margin-bottom:14px;">
           <div style="position:relative;height:240px;"><canvas ref="{{ refs.momAds }}"></canvas></div>
         </div>
@@ -764,6 +844,7 @@ class Component extends DCLogic {
     this.state={
       activeTab:'followers', isDark:true, viewMode:'all', selectedMonth:null,
       compMonthA:null, compMonthB:null,
+      momCompA:{followers:null,visitors:null,content:null,ads:null}, momCompB:{followers:null,visitors:null,content:null,ads:null},
       searchTerms:{followers:'',visitors:'',content:'',ads:'',competitors:''},
       uploads:savedUploads,
       uploadStatus:{followers:null,visitors:null,content:null,ads:null,competitors:null},
@@ -781,6 +862,14 @@ class Component extends DCLogic {
     this.onMonthChange=(e)=>this.setState({selectedMonth:e.target.value});
     this.onCompMonthAChange=(e)=>this.setState({compMonthA:e.target.value});
     this.onCompMonthBChange=(e)=>this.setState({compMonthB:e.target.value});
+    this.onMomCompFollowersAChange=(e)=>this.setState(s=>({momCompA:{...s.momCompA,followers:e.target.value}}));
+    this.onMomCompFollowersBChange=(e)=>this.setState(s=>({momCompB:{...s.momCompB,followers:e.target.value}}));
+    this.onMomCompVisitorsAChange=(e)=>this.setState(s=>({momCompA:{...s.momCompA,visitors:e.target.value}}));
+    this.onMomCompVisitorsBChange=(e)=>this.setState(s=>({momCompB:{...s.momCompB,visitors:e.target.value}}));
+    this.onMomCompContentAChange=(e)=>this.setState(s=>({momCompA:{...s.momCompA,content:e.target.value}}));
+    this.onMomCompContentBChange=(e)=>this.setState(s=>({momCompB:{...s.momCompB,content:e.target.value}}));
+    this.onMomCompAdsAChange=(e)=>this.setState(s=>({momCompA:{...s.momCompA,ads:e.target.value}}));
+    this.onMomCompAdsBChange=(e)=>this.setState(s=>({momCompB:{...s.momCompB,ads:e.target.value}}));
     this.onSearchFollowers=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,followers:e.target.value}}));
     this.onSearchVisitors=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,visitors:e.target.value}}));
     this.onSearchContent=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,content:e.target.value}}));
@@ -1084,6 +1173,31 @@ class Component extends DCLogic {
     const momContentRows=momRows(cSeries);
     const momAdsRows=momRows(aSeries,(x)=>'$'+x.toLocaleString());
 
+    // Pick-any-two-months comparison, reused for each of the 4 sections on the Month-over-Month page.
+    const buildCompare=(series,mAraw,mBraw,fmt)=>{
+      const f=fmt||((x)=>x.toLocaleString());
+      const labels=series.labels;
+      const mA=mAraw || (labels.length>1?labels[labels.length-2]:labels[0]) || '';
+      const mB=mBraw || labels[labels.length-1] || '';
+      const iA=labels.indexOf(mA), iB=labels.indexOf(mB);
+      const vA=iA>=0?series.values[iA]:null, vB=iB>=0?series.values[iB]:null;
+      const diff=(vA!=null&&vB!=null)?(vB-vA):null;
+      const pct=(diff!=null&&vA)?(diff/vA*100):null;
+      const up=pct!=null&&pct>=0;
+      return {
+        months:labels, monthA:mA, monthB:mB,
+        aVal:vA!=null?f(vA):'—', bVal:vB!=null?f(vB):'—',
+        diffText:diff==null?'—':(diff>=0?'+':'-')+f(Math.abs(diff)),
+        pctText:pct==null?'No % change available':(up?'↑ ':'↓ ')+Math.abs(pct).toFixed(1)+'%',
+        pctColor:pct==null?C.sub:(up?'#21a866':'#e74c3c'),
+      };
+    };
+    const mCompA=this.state.momCompA||{}, mCompB=this.state.momCompB||{};
+    const momCompFollowers=buildCompare(fSeries, mCompA.followers, mCompB.followers);
+    const momCompVisitors=buildCompare(vSeries, mCompA.visitors, mCompB.visitors);
+    const momCompContent=buildCompare(cSeries, mCompA.content, mCompB.content);
+    const momCompAds=buildCompare(aSeries, mCompA.ads, mCompB.ads, (x)=>'$'+x.toLocaleString());
+
     // Pick-any-two-months comparison for the Followers page (left = from, middle = to, right = result).
     const followerCompMonths=fSeries.labels;
     const compMonthA=this.state.compMonthA || (followerCompMonths.length>1?followerCompMonths[followerCompMonths.length-2]:followerCompMonths[0]) || '';
@@ -1128,6 +1242,11 @@ class Component extends DCLogic {
       followerStatus, visitorStatus, contentStatus, adStatus, competitorStatus,
       momFollowersRows, momVisitorsRows, momContentRows, momAdsRows,
       followerCompMonths, compMonthA, compMonthB, onCompMonthAChange:this.onCompMonthAChange, onCompMonthBChange:this.onCompMonthBChange, followerCompResult,
+      momCompFollowers, momCompVisitors, momCompContent, momCompAds,
+      onMomCompFollowersAChange:this.onMomCompFollowersAChange, onMomCompFollowersBChange:this.onMomCompFollowersBChange,
+      onMomCompVisitorsAChange:this.onMomCompVisitorsAChange, onMomCompVisitorsBChange:this.onMomCompVisitorsBChange,
+      onMomCompContentAChange:this.onMomCompContentAChange, onMomCompContentBChange:this.onMomCompContentBChange,
+      onMomCompAdsAChange:this.onMomCompAdsAChange, onMomCompAdsBChange:this.onMomCompAdsBChange,
       hasCompetitorHistory: competitorHistory.length>0, competitorHistory,
     };
   }
