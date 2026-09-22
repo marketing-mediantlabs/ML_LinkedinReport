@@ -23,6 +23,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   *,*::before,*::after{box-sizing:border-box;}
   body{margin:0;}
@@ -105,6 +106,14 @@
               <button onClick="{{ onCancelPending }}" style="background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:7px 14px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">Discard</button>
             </div>
           </div>
+          </sc-if>
+        </div>
+        <div style="background:{{ C.s }};border:1px dashed {{ C.br }};border-radius:10px;padding:12px 14px;">
+          <div style="font-size:11px;font-weight:700;margin-bottom:6px;">📊 Upload Follower Demographics (Excel — Location, Seniority, Company size tabs)</div>
+          <input type="file" accept=".xlsx,.xls" onChange="{{ onUploadDemo }}" style="font-size:11px;color:{{ C.sub }};width:100%;"/>
+          <div style="font-size:10px;color:{{ demoStatus.color }};margin-top:6px;">{{ demoStatus.text }}</div>
+          <sc-if value="{{ hasDemoData }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ onClearDemo }}" style="background:transparent;border:1px solid #e74c3c;color:#e74c3c;padding:4px 10px;border-radius:7px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;">Clear demographics</button>
           </sc-if>
         </div>
       </div>
@@ -193,7 +202,7 @@
         </div>
       </div>
 
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Top Follower Locations</span><div style="flex:1;height:1px;background:{{ C.br }};"></div></div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{{ C.sub }};margin-bottom:12px;display:flex;align-items:center;gap:8px;"><span>Top Follower Locations</span><div style="flex:1;height:1px;background:{{ C.br }};"></div><select onChange="{{ onLocCountryChange }}" value="{{ locCountry }}" style="background:{{ C.s2 }};border:1px solid {{ C.br }};color:{{ C.tx }};padding:5px 8px;border-radius:7px;font-size:10px;text-transform:none;letter-spacing:normal;font-weight:600;"><option value="">All countries</option><sc-for list="{{ locCountries }}" as="ctry" hint-placeholder-count="3"><option value="{{ ctry.name }}">{{ ctry.totalLabel }}</option></sc-for></select></div>
       <div style="background:{{ C.s }};border:1px solid {{ C.br }};border-radius:13px;overflow:hidden;margin-bottom:20px;">
         <table style="width:100%;border-collapse:collapse;">
           <thead><tr>
@@ -897,6 +906,7 @@ const TYPE_COLOR={'Employer Branding':'#21a866','Thought Leadership':'#2189bd','
 const RANK6=['#e74c3c','#e07b2a','#f5b942','#9b59b6','#5ec7f5','#21a866'];
 const MONTH_ABBR=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const LS_KEY='ml-linkedin-dashboard-uploads-v1';
+const LS_DEMO_KEY='ml-linkedin-dashboard-follower-demo-v1';
 
 const D25RAW=[['4/1',2],['4/21',43],['5/12',31],['6/16',28],['6/18',30],['6/27',26],['10/10',50]];
 const D26RAW=[['2/18',80],['3/16',94],['4/9',87],['5/22',110],['6/29',218]];
@@ -973,6 +983,8 @@ class Component extends DCLogic {
     super(props);
     let savedUploads={followers:{},visitors:{},content:{},ads:{},competitors:{}};
     try{ const raw=localStorage.getItem(LS_KEY); if(raw){ const parsed=JSON.parse(raw); Object.assign(savedUploads,parsed); } }catch(e){}
+    let savedDemo=null;
+    try{ const rawDemo=localStorage.getItem(LS_DEMO_KEY); if(rawDemo) savedDemo=JSON.parse(rawDemo); }catch(e){}
     this.state={
       activeTab:'followers', isDark:true, viewMode:'all', selectedMonth:null,
       compMonthA:null, compMonthB:null,
@@ -981,6 +993,9 @@ class Component extends DCLogic {
       uploads:savedUploads,
       uploadStatus:{followers:null,visitors:null,content:null,ads:null,competitors:null},
       pendingUpload:null,
+      followerDemo:savedDemo,
+      demoStatus:null,
+      locCountry:'',
     };
     this.chartEls={}; this.chartInstances={}; this.chartRefs={};
     CHART_IDS.forEach(id=>{ this.chartRefs[id]=(el)=>{
@@ -1005,6 +1020,12 @@ class Component extends DCLogic {
     this.onMomCompContentBChange=(e)=>this.setState(s=>({momCompB:{...s.momCompB,content:e.target.value}}));
     this.onMomCompAdsAChange=(e)=>this.setState(s=>({momCompA:{...s.momCompA,ads:e.target.value}}));
     this.onMomCompAdsBChange=(e)=>this.setState(s=>({momCompB:{...s.momCompB,ads:e.target.value}}));
+    this.onUploadDemo=(e)=>this.handleDemoUpload(e.target.files[0]);
+    this.onLocCountryChange=(e)=>this.setState({locCountry:e.target.value});
+    this.onClearDemo=()=>{
+      try{ localStorage.removeItem(LS_DEMO_KEY); }catch(e){}
+      this.setState({followerDemo:null,demoStatus:{text:'Cleared — showing baseline data.',color:'#8b93b0'}},()=>this.rebuildMountedCharts(true));
+    };
     this.onSearchFollowers=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,followers:e.target.value}}));
     this.onSearchVisitors=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,visitors:e.target.value}}));
     this.onSearchContent=(e)=>this.setState(s=>({searchTerms:{...s.searchTerms,content:e.target.value}}));
@@ -1480,6 +1501,48 @@ class Component extends DCLogic {
   }
   setUploadStatus(section,text,warn){ this.setState(s=>({uploadStatus:{...s.uploadStatus,[section]:{text,color:warn?'#e07b2a':'#21a866'}}})); }
 
+  /**
+   * Follower demographics (Location/Seniority/Company size) come from a
+   * different LinkedIn export than the daily Followers table: one workbook
+   * with a tab per category. There's no per-month history for these, just a
+   * current snapshot — each upload replaces the whole thing, like Competitors.
+   */
+  readDemoSheet(wb,name){
+    const sh=wb.Sheets[name];
+    if(!sh) return null;
+    const rows=window.XLSX.utils.sheet_to_json(sh,{header:1,defval:''});
+    const body=rows.slice(1).filter(r=>r[0]!==''&&r[0]!=null);
+    if(!body.length) return null;
+    return {labels:body.map(r=>String(r[0])), values:body.map(r=>this.num(r[1]))};
+  }
+  handleDemoUpload(file){
+    if(!file) return;
+    if(!window.XLSX){ this.setState({demoStatus:{text:'Excel reader still loading — try again in a moment.',color:'#e07b2a'}}); return; }
+    this.setState({demoStatus:{text:'Reading '+file.name+'…',color:'#8b93b0'}});
+    file.arrayBuffer().then(buf=>{
+      const wb=window.XLSX.read(buf,{type:'array'});
+      const loc=this.readDemoSheet(wb,'Location');
+      const sen=this.readDemoSheet(wb,'Seniority');
+      const cs=this.readDemoSheet(wb,'Company size');
+      const found=[loc,sen,cs].filter(Boolean);
+      if(!found.length){
+        this.setState({demoStatus:{text:'Could not find Location, Seniority, or Company size tabs in that file.',color:'#e74c3c'}});
+        return;
+      }
+      const followerDemo={loc,sen,cs};
+      try{ localStorage.setItem(LS_DEMO_KEY, JSON.stringify(followerDemo)); }catch(e){}
+      const parts=[];
+      if(loc) parts.push('Location ('+loc.labels.length+')');
+      if(sen) parts.push('Seniority ('+sen.labels.length+')');
+      if(cs) parts.push('Company size ('+cs.labels.length+')');
+      const missing=['loc','sen','cs'].filter((k,i)=>![loc,sen,cs][i]).length;
+      const warnText=missing?' — '+missing+' tab(s) not found, keeping baseline for those':'';
+      this.setState({followerDemo,demoStatus:{text:'Saved: '+parts.join(', ')+' ✓'+warnText,color:missing?'#e07b2a':'#21a866'}},()=>this.rebuildMountedCharts(true));
+    }).catch(err=>{
+      this.setState({demoStatus:{text:'Could not read that file: '+err.message,color:'#e74c3c'}});
+    });
+  }
+
   getSeries(section){
     let labels,values,values2;
     if(section==='followers'){ labels=[...DATA.MONTHS]; values=[...DATA.F_TOT]; values2=null; }
@@ -1531,8 +1594,8 @@ class Component extends DCLogic {
     const momBar=(s)=>({type:'bar',data:{labels:s.labels,datasets:[{data:s.values,backgroundColor:'rgba(33,137,189,.75)',borderColor:'#2189bd',borderWidth:2,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:this.noLeg(),scales:{x:{grid:{color:g},ticks:{color:t,font:{size:9}}},y:{grid:{color:g},ticks:{color:t}}}}});
     switch(id){
       case 'monthlyFollowers': { const s=this.getSeries('followers'); return {type:'bar',data:{labels:s.labels,datasets:[{data:s.values,backgroundColor:'rgba(33,168,102,.75)',borderColor:'#21a866',borderWidth:2,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:this.noLeg(),scales:{x:axX,y:{grid:{color:g},ticks:{color:t}}}}}; }
-      case 'fSeniority': return {type:'doughnut',data:{labels:DATA.F_SEN_L,datasets:[{data:DATA.F_SEN_D,backgroundColor:PAL,borderWidth:2,borderColor:isDark?'#181c27':'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{color:t,boxWidth:9,font:{size:10},padding:6}}}}};
-      case 'fCsize': return {type:'doughnut',data:{labels:DATA.F_CS_L,datasets:[{data:DATA.F_CS_D,backgroundColor:PAL,borderWidth:2,borderColor:isDark?'#181c27':'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{color:t,boxWidth:9,font:{size:10},padding:6}}}}};
+      case 'fSeniority': { const d=this.state.followerDemo&&this.state.followerDemo.sen; return {type:'doughnut',data:{labels:d?d.labels:DATA.F_SEN_L,datasets:[{data:d?d.values:DATA.F_SEN_D,backgroundColor:PAL,borderWidth:2,borderColor:isDark?'#181c27':'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{color:t,boxWidth:9,font:{size:10},padding:6}}}}}; }
+      case 'fCsize': { const d=this.state.followerDemo&&this.state.followerDemo.cs; return {type:'doughnut',data:{labels:d?d.labels:DATA.F_CS_L,datasets:[{data:d?d.values:DATA.F_CS_D,backgroundColor:PAL,borderWidth:2,borderColor:isDark?'#181c27':'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{color:t,boxWidth:9,font:{size:10},padding:6}}}}}; }
       case 'vMonthly': { const s=this.getSeries('visitors'); return {type:'bar',data:{labels:s.labels,datasets:[{label:'Page Views',data:s.values,backgroundColor:'rgba(33,137,189,.7)',borderColor:'#2189bd',borderWidth:1.5,borderRadius:5,yAxisID:'y'},{label:'Unique Visitors',data:s.values2,type:'line',borderColor:'#21a866',backgroundColor:'rgba(33,168,102,.1)',borderWidth:2,pointRadius:3,tension:.4,fill:false,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:t,font:{size:10}}}},scales:{x:axX,y:{grid:{color:g},ticks:{color:t},position:'left'},y1:{grid:{drawOnChartArea:false},ticks:{color:t},position:'right'}}}}; }
       case 'vIndustry': return {type:'bar',data:{labels:DATA.V_IND_L,datasets:[{data:DATA.V_IND_D,backgroundColor:'rgba(33,137,189,.7)',borderColor:'#2189bd',borderWidth:1.5,borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:this.noLeg(),scales:{x:{grid:{color:g},ticks:{color:t}},y:{grid:{color:g},ticks:{color:t,font:{size:9}}}}}};
       case 'vJob': return {type:'bar',data:{labels:DATA.V_JOB_L,datasets:[{data:DATA.V_JOB_D,backgroundColor:'rgba(33,168,102,.7)',borderColor:'#21a866',borderWidth:1.5,borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:this.noLeg(),scales:{x:{grid:{color:g},ticks:{color:t}},y:{grid:{color:g},ticks:{color:t,font:{size:9}}}}}};
@@ -1559,6 +1622,21 @@ class Component extends DCLogic {
     return fields.some(f=>String(row[f]||'').toLowerCase().includes(q));
   }
 
+  /**
+   * LinkedIn's location strings are "<Region>, <Country>" for everywhere
+   * except the US, where the country is simply omitted (e.g. "San Francisco
+   * Bay Area", "Austin, Texas Metropolitan Area") — there's no clean way to
+   * derive that from the string alone. Treat the text after the last comma
+   * as the country when it's a recognized country name; anything else
+   * (no comma, or a trailing US state/metro name) defaults to United States.
+   */
+  countryOf(label){
+    const KNOWN_COUNTRIES=['India','Canada','United Kingdom','Australia','Germany','France','Singapore','United Arab Emirates','Ireland','Netherlands','Brazil','Mexico','Japan','China','Philippines','Spain','Italy','South Africa','New Zealand','Malaysia','Indonesia','Vietnam','Sri Lanka','Bangladesh','Pakistan','Nigeria','Kenya','Egypt','Saudi Arabia','Qatar','Switzerland','Sweden','Norway','Denmark','Poland','Belgium','Austria','Portugal','Israel','Thailand','South Korea'];
+    const parts=String(label).split(',').map(s=>s.trim()).filter(Boolean);
+    const last=parts[parts.length-1];
+    return KNOWN_COUNTRIES.includes(last) ? last : 'United States';
+  }
+
   renderVals(){
     const isDark=this.state.isDark;
     const C={
@@ -1580,7 +1658,7 @@ class Component extends DCLogic {
     const peakLabel=(s)=>{ if(!s.labels.length) return '—'; let bi=0; s.values.forEach((v,i)=>{ if(v>s.values[bi]) bi=i; }); return s.labels[bi]; };
     const span=(s)=> s.labels.length ? (s.labels[0]+' → '+s.labels[s.labels.length-1]) : '—';
 
-    const PRE_BASE=207;          // followers on the page before tracking began
+    const PRE_BASE=4173;         // calibrated so Total Page Followers matches the live LinkedIn count once tracked growth is added
     const ORGANIC_SHARE=0.970;   // organic vs auto-invited split from the LinkedIn export
 
     // Freshness stamp: the newest month any domain actually holds data for.
@@ -1606,7 +1684,7 @@ class Component extends DCLogic {
       kpi('New Followers (Tracked)',N(fTracked),span(fs),fMonths+' months','def','g'),
       kpi('Organic',N(fOrganic),(ORGANIC_SHARE*100).toFixed(1)+'% of all growth','↑ '+(ORGANIC_SHARE*100).toFixed(1)+'%','def','g'),
       kpi('Auto-Invited',N(fInvited),(100-ORGANIC_SHARE*100).toFixed(1)+'% of total',(100-ORGANIC_SHARE*100).toFixed(1)+'%','b','b'),
-      kpi('Pre-tracking Base',N(PRE_BASE),'Followers before Apr 1, 2025','Historical','o','b'),
+      kpi('Pre-tracking Base',N(PRE_BASE),'Baseline as of Sep 22, 2026','Historical','o','b'),
       kpi('Latest Month',N(fs.values.length?fs.values[fs.values.length-1]:0),fs.labels.length?fs.labels[fs.labels.length-1]:'—','Most recent','o','b'),
       kpi('Best Month',N(peak(fs.values)),peakLabel(fs),'Monthly record','b','b'),
       kpi('Monthly Avg',N(fTracked/fMonths),'Across '+fMonths+' months','Avg','p','b'),
@@ -1664,7 +1742,22 @@ class Component extends DCLogic {
     ];
 
     const rankStyle=(i)=> i===0?{bg:'rgba(255,196,0,.15)',c:'#ffc400'}:i===1?{bg:'rgba(180,180,180,.15)',c:'#b4b4b4'}:i===2?{bg:'rgba(184,115,51,.15)',c:'#b87333'}:{bg:C.s2,c:C.sub};
-    const fLocRowsAll=DATA.F_LOC.map((r,i)=>({...r,rank:i+1,rc:rankStyle(i),barW:Math.round(r.p*1.8),pLabel:r.p+'%'}));
+    const locDemo=this.state.followerDemo&&this.state.followerDemo.loc;
+    const locBase=locDemo ? (()=>{
+      const total=locDemo.values.reduce((a,b)=>a+b,0)||1;
+      return locDemo.labels.map((l,i)=>({l,v:locDemo.values[i],p:Math.round(locDemo.values[i]/total*1000)/10}));
+    })() : DATA.F_LOC;
+    const locCountryTotals={};
+    locBase.forEach(r=>{ const c=this.countryOf(r.l); locCountryTotals[c]=(locCountryTotals[c]||0)+r.v; });
+    const locCountries=Object.keys(locCountryTotals).sort((a,b)=>locCountryTotals[b]-locCountryTotals[a]).map(name=>({name,totalLabel:name+' — '+locCountryTotals[name].toLocaleString()}));
+    const locCountry=this.state.locCountry||'';
+    let locRowsForTable=locBase;
+    if(locCountry){
+      const filtered=locBase.filter(r=>this.countryOf(r.l)===locCountry);
+      const ftotal=filtered.reduce((a,r)=>a+r.v,0)||1;
+      locRowsForTable=filtered.map(r=>({l:r.l,v:r.v,p:Math.round(r.v/ftotal*1000)/10}));
+    }
+    const fLocRowsAll=locRowsForTable.map((r,i)=>({...r,rank:i+1,rc:rankStyle(i),barW:Math.round(r.p*1.8),pLabel:r.p+'%'}));
     const vLocRowsAll=DATA.V_LOC.map((r,i)=>({...r,rank:i+1,rc:rankStyle(i),barW:Math.round(r.p*1.2),pLabel:r.p+'%'}));
     const topPostRowsAll=DATA.TOP_POSTS.map((p,i)=>({...p,rank:i+1,rc:rankStyle(i),tColor:TYPE_COLOR[p.type]||C.sub,tBg:(TYPE_COLOR[p.type]||C.sub)+'26',impr:p.impr.toLocaleString(),er:(p.eng/p.impr*100).toFixed(1)}));
     const compRowsAll=DATA.COMP.map((c,i)=>({...c,rank:i+1,rc:rankStyle(i),fLabel:c.f.toLocaleString(),rLabel:c.r.toLocaleString(),rowBg:c.highlight?C.gg:'transparent'}));
@@ -1822,6 +1915,10 @@ class Component extends DCLogic {
       followerUploadCount:Object.keys(this.state.uploads.followers||{}).length,
       hasFollowerUploads:Object.keys(this.state.uploads.followers||{}).length>0, onUploadVisitors:this.onUploadVisitors, onUploadContent:this.onUploadContent, onUploadAds:this.onUploadAds, onUploadCompetitors:this.onUploadCompetitors,
       followerStatus, visitorStatus, contentStatus, adStatus, competitorStatus,
+      onUploadDemo:this.onUploadDemo, onClearDemo:this.onClearDemo,
+      demoStatus:this.state.demoStatus||{text:'No file uploaded yet this session.',color:C.sub},
+      hasDemoData:!!this.state.followerDemo,
+      locCountries, locCountry, onLocCountryChange:this.onLocCountryChange,
       momFollowersRows, momVisitorsRows, momContentRows, momAdsRows,
       followerCompMonths, compMonthA, compMonthB, onCompMonthAChange:this.onCompMonthAChange, onCompMonthBChange:this.onCompMonthBChange, followerCompResult,
       momCompFollowers, momCompVisitors, momCompContent, momCompAds,
