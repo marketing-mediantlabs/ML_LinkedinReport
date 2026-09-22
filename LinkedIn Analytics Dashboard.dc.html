@@ -1206,13 +1206,16 @@ class Component extends DCLogic {
     }
     const n=dates.length;
     if(n<2 || nums.length<n*4) return null;
-    const headers=['Date','Sponsored followers','Organic followers','Auto-invited followers','Total followers'];
-    const build=(get)=>dates.map((d,i)=>({Date:d,'Sponsored followers':get(i,0),'Organic followers':get(i,1),'Auto-invited followers':get(i,2),'Total followers':get(i,3)}));
+    // findCol's patterns are lowercase-only and case-sensitive (parseCSV always
+    // lowercases real CSV headers first) — these synthesized headers/keys must
+    // match that convention or extractValue silently finds nothing.
+    const headers=['date','sponsored followers','organic followers','auto-invited followers','total followers'];
+    const build=(get)=>dates.map((d,i)=>({date:d,'sponsored followers':get(i,0),'organic followers':get(i,1),'auto-invited followers':get(i,2),'total followers':get(i,3)}));
     const isValid=(rows)=>{
       let ok=0;
       rows.forEach(r=>{
-        const sum=this.num(r['Sponsored followers'])+this.num(r['Organic followers'])+this.num(r['Auto-invited followers']);
-        if(sum===this.num(r['Total followers'])) ok++;
+        const sum=this.num(r['sponsored followers'])+this.num(r['organic followers'])+this.num(r['auto-invited followers']);
+        if(sum===this.num(r['total followers'])) ok++;
       });
       return ok>=Math.ceil(rows.length*0.8);
     };
@@ -1250,7 +1253,7 @@ class Component extends DCLogic {
       if(section==='followers'){
         const tbl=this.parseFollowersPdfTable(text);
         if(tbl){
-          const grouped=this.groupRowsByMonth(tbl.rows,'Date');
+          const grouped=this.groupRowsByMonth(tbl.rows,'date');
           if(grouped && grouped.labels.length>1){
             const probeWarnings=[];
             const entries=grouped.labels.map(lbl=>({
