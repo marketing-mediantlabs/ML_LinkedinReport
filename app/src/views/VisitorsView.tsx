@@ -40,7 +40,7 @@ export function VisitorsView(ctx: ViewCtx) {
     <div data-screen-label="Visitors">
       <PageHead
         title="Page Visitor Report"
-        subtitle="LinkedIn company page visits · Jul 9, 2025 – Jul 8, 2026"
+        subtitle="LinkedIn company page visits · Oct 2025 – Sep 2026"
         chip="365 days · All page views combined"
       />
 

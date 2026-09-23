@@ -36,7 +36,7 @@ export function CompetitorsView(ctx: ViewCtx) {
     <div data-screen-label="Competitors">
       <PageHead
         title="Competitor Benchmarking"
-        subtitle="LinkedIn company page comparison · Jul 9, 2025 – Jul 8, 2026"
+        subtitle="LinkedIn company page comparison · Oct 2025 – Sep 2026"
         chip="Same 12-month period for all competitors"
       />
 

@@ -51,7 +51,7 @@ export function FollowersView(ctx: ViewCtx) {
     <div data-screen-label="Followers">
       <PageHead
         title="Follower Growth Report"
-        subtitle="Full organic growth analysis · Apr 1, 2025 – Jul 8, 2026, plus your monthly uploads"
+        subtitle="Full organic growth analysis · Oct 2025 – Sep 2026, plus your monthly uploads"
         chip="Live total: 3,144 · Starting base: 207"
       />
 

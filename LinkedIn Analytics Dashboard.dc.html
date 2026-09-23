@@ -655,7 +655,7 @@
     <div data-screen-label="Competitors">
       <div style="margin-bottom:20px;">
         <h1 style="font-size:21px;font-weight:700;margin:0;">Competitor Benchmarking</h1>
-        <p style="color:{{ C.sub }};font-size:12px;margin:3px 0 0;">LinkedIn company page comparison · Jul 9, 2025 – Jul 8, 2026</p>
+        <p style="color:{{ C.sub }};font-size:12px;margin:3px 0 0;">LinkedIn company page comparison · Oct 2025 – Sep 2026</p>
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:20px;">
@@ -946,9 +946,9 @@ const DATA={
   F_CS_L:[],
   F_CS_D:[],
   F_LOC:[],
-  V_MONTHS:['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Sep 26'],
-  V_PV:[556,716,1127,836,996,544,660,638,852,1404,1137,1028,596,2111],
-  V_UV:[214,280,393,326,404,214,243,235,328,472,466,343,184,711],
+  V_MONTHS:['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Sep 26'],
+  V_PV:[836,996,544,660,638,852,1404,1137,1028,596,2111],
+  V_UV:[326,404,214,243,235,328,472,466,343,184,711],
   V_IND_L:['IT Services & IT Consulting','E-Learning Providers','Software Development','Technology & Internet','Education','Design Services','Graphic Design','Animation & Post-prod.','HR Services','Edu Admin Programs'],
   V_IND_D:[4962,3329,1507,1217,643,610,458,438,334,320],
   V_JOB_L:['Arts & Design','Education','Engineering','Human Resources','IT','Business Dev','Media & Comm.','Operations','Marketing','Project Mgmt'],
@@ -958,21 +958,17 @@ const DATA={
   V_CS_L:['51–200','10,001+','11–50','1,001–5K','501–1K','201–500','2–10','5K–10K'],
   V_CS_D:[3158,2796,1968,1659,1449,1086,757,581],
   V_LOC:[{l:'Greater Chennai Area, India',v:8984,p:52.5},{l:'Greater Bengaluru Area, India',v:2322,p:13.6},{l:'Greater Delhi Area, India',v:1010,p:5.9},{l:'Greater Hyderabad Area, India',v:885,p:5.2},{l:'Mumbai Metropolitan Region, India',v:524,p:3.1},{l:'Pune/Pimpri-Chinchwad Area, India',v:497,p:2.9},{l:'Greater Coimbatore Area, India',v:381,p:2.2},{l:'Greater Madurai Area, India',v:226,p:1.3},{l:'Noida, India',v:201,p:1.2},{l:'Greater Kolkata Area, India',v:199,p:1.2},{l:'Austin, Texas Metropolitan Area',v:195,p:1.1},{l:'Tiruvallur, India',v:151,p:0.9},{l:'Siliguri, India',v:105,p:0.6},{l:'Tiruchirappalli, India',v:103,p:0.6},{l:'Kochi, India',v:97,p:0.6}],
-  C_MONTHS:['Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'],
-  C_IMP:[4165,3711,3436,8039,23564,11221,5792,19061,17664,43580,75799,36526,15266,8992],
-  C_ENG:[575,321,279,1091,994,687,484,1999,1747,1288,1317,1702,1239,808],
+  C_MONTHS:['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'],
+  C_IMP:[23564,11221,5792,19061,17664,43580,75799,36526,15266,8992],
+  C_ENG:[994,687,484,1999,1747,1288,1317,1702,1239,808],
   MEDIA_L:['Video','Image','Text','Article'],
   MEDIA_AVG_IMPR:[1693,1453,1038,541],
   C_POST_TYPE_L:['Welcome aboard','Thought Leadership','Employer Branding','Wishes','Employee Milestone','Job Opening'],
   C_POST_ENG_R:[8.6,7.4,14.1,12.7,12.6,10.2],
   TOP_POSTS:[
-    {date:'3/13/2025',type:'Employer Branding',media:'Image',impr:3802,eng:519},
-    {date:'9/8/2025',type:'Employer Branding',media:'Video',impr:3430,eng:583},
-    {date:'4/4/2025',type:'Employer Branding',media:'Image',impr:3414,eng:361},
     {date:'1/23/2026',type:'Thought Leadership',media:'Text',impr:4718,eng:47},
     {date:'10/19/2025',type:'Wishes',media:'Video',impr:2085,eng:109},
     {date:'1/27/2026',type:'Welcome aboard',media:'Image',impr:2251,eng:242},
-    {date:'6/23/2025',type:'Wishes',media:'Image',impr:1867,eng:452},
     {date:'1/30/2026',type:'Employer Branding',media:'Video',impr:1820,eng:403},
     {date:'2/5/2026',type:'Employee Milestone',media:'Image',impr:1999,eng:204},
     {date:'11/5/2025',type:'Welcome aboard',media:'Image',impr:1807,eng:170},
@@ -1163,8 +1159,11 @@ class Component extends DCLogic {
     const lines=text.split(/\r?\n/).filter(l=>l.trim().length);
     if(!lines.length) return [];
     const split=(line)=> (line.match(/(".*?"|[^",]+)(?=,|$)/g)||[]).map(s=>s.replace(/^"|"$/g,'').trim());
-    const headers=split(lines[0]).map(h=>h.toLowerCase());
-    return lines.slice(1).map(line=>{
+    const isPreamble=(cells)=>cells.length<2||cells.every(c=>c===''||/^\d{1,4}[/-]\d{1,2}[/-]\d{1,4}$/.test(c)||/^-?[\d,]+(\.\d+)?%?$/.test(c));
+    let hIdx=0;
+    while(hIdx<lines.length-1 && isPreamble(split(lines[hIdx]))) hIdx++;
+    const headers=split(lines[hIdx]).map(h=>h.toLowerCase());
+    return lines.slice(hIdx+1).map(line=>{
       const cells=split(line); const row={};
       headers.forEach((h,i)=>{ row[h]=cells[i]!==undefined?cells[i]:''; });
       return row;
@@ -1448,10 +1447,10 @@ class Component extends DCLogic {
       return {primary:pv,secondary:uv};
     }
     if(section==='content'){
-      const impCol=this.findCol(headers,[/impression/]);
-      const clkCol=this.findCol(headers,[/click/]);
-      const reactCol=this.findCol(headers,[/reaction/,/like/]);
-      const comCol=this.findCol(headers,[/comment/]);
+      const impCol=this.findCol(headers,[/impression.*\(total\)/,/impression/]);
+      const clkCol=this.findCol(headers,[/click.*\(total\)/,/click/]);
+      const reactCol=this.findCol(headers,[/reaction.*\(total\)/,/like.*\(total\)/,/reaction/,/like/]);
+      const comCol=this.findCol(headers,[/comment.*\(total\)/,/comment/]);
       if(!impCol) warnings.push('Could not find impressions column');
       return {primary:sum(impCol), secondary:sum(clkCol)+sum(reactCol)+sum(comCol), posts:rows.length};
     }
@@ -1510,8 +1509,8 @@ class Component extends DCLogic {
           if(uvCol) rows.forEach(r=>uv+=this.num(r[uvCol])); else { uv=Math.round(pv*0.38); warnings.push('Unique visitors estimated (~38% of views)'); }
           value={primary:pv,secondary:uv};
         } else if(section==='content'){
-          const impCol=this.findCol(headers,[/impression/]);
-          const clkCol=this.findCol(headers,[/click/]); const reactCol=this.findCol(headers,[/reaction|like/]); const comCol=this.findCol(headers,[/comment/]);
+          const impCol=this.findCol(headers,[/impression.*\(total\)/,/impression/]);
+          const clkCol=this.findCol(headers,[/click.*\(total\)/,/click/]); const reactCol=this.findCol(headers,[/(reaction|like).*\(total\)/,/reaction|like/]); const comCol=this.findCol(headers,[/comment.*\(total\)/,/comment/]);
           let imp=0,eng=0;
           if(impCol) rows.forEach(r=>imp+=this.num(r[impCol])); else warnings.push('Could not find impressions column');
           if(clkCol||reactCol||comCol) rows.forEach(r=>eng+=this.num(r[clkCol])+this.num(r[reactCol])+this.num(r[comCol]));

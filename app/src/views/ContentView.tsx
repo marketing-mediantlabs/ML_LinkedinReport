@@ -60,7 +60,7 @@ export function ContentView(ctx: ViewCtx) {
     <div data-screen-label="Content">
       <PageHead
         title="Content Performance Report"
-        subtitle="81 posts tracked · Mar 2025 – Mar 2026, plus the LinkedIn content export"
+        subtitle="81 posts tracked · Oct 2025 – Jul 2026, plus the LinkedIn content export"
         chip="Total impressions: 254,813 · Reactions: 3,263 · Clicks: 9,070"
       />
 

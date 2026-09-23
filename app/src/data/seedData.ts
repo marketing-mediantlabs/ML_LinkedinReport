@@ -19,9 +19,9 @@ export const F_CS_D: number[] = [];
 
 export const F_LOC: LocRow[] = [];
 
-export const V_MONTHS = ['Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Sep 26'];
-export const V_PV = [556,716,1127,836,996,544,660,638,852,1404,1137,1028,596,2111];
-export const V_UV = [214,280,393,326,404,214,243,235,328,472,466,343,184,711];
+export const V_MONTHS = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26','Sep 26'];
+export const V_PV = [836,996,544,660,638,852,1404,1137,1028,596,2111];
+export const V_UV = [326,404,214,243,235,328,472,466,343,184,711];
 
 export const V_IND_L = ['IT Services & IT Consulting','E-Learning Providers','Software Development','Technology & Internet','Education','Design Services','Graphic Design','Animation & Post-prod.','HR Services','Edu Admin Programs'];
 export const V_IND_D = [4962,3329,1507,1217,643,610,458,438,334,320];
@@ -50,12 +50,12 @@ export const V_LOC: LocRow[] = [
   { l: 'Kochi, India', v: 97, p: 0.6 },
 ];
 
-export const C_MONTHS = ['Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
-export const C_IMP = [4165,3711,3436,8039,23564,11221,5792,19061,17664,43580,75799,36526,15266,8992];
-export const C_ENG = [575,321,279,1091,994,687,484,1999,1747,1288,1317,1702,1239,808];
+export const C_MONTHS = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
+export const C_IMP = [23564,11221,5792,19061,17664,43580,75799,36526,15266,8992];
+export const C_ENG = [994,687,484,1999,1747,1288,1317,1702,1239,808];
 
-export const PC_MONTHS = ['Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
-export const PC_COUNT = [2,3,9,3,2,12,16,11,23,18,15,8];
+export const PC_MONTHS = ['Oct 25','Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26','Jun 26','Jul 26'];
+export const PC_COUNT = [9,3,2,12,16,11,23,18,15,8];
 
 export const C_POST_TYPE_L = ['Welcome aboard','Thought Leadership','Employer Branding','Wishes','Employee Milestone','Job Opening'];
 export const C_POST_ENG_R = [8.6,7.4,14.1,12.7,12.6,10.2];
@@ -73,13 +73,9 @@ export const MEDIA_COUNT = [16,39,21,5];
 export const MEDIA_TOTAL_IMPR = [27095,56704,21804,2706];
 
 export const TOP_POSTS: TopPost[] = [
-  { date: '3/13/2025', type: 'Employer Branding', media: 'Image', impr: 3802, eng: 519, react: 188 },
-  { date: '9/8/2025', type: 'Employer Branding', media: 'Video', impr: 3430, eng: 583, react: 72 },
-  { date: '4/4/2025', type: 'Employer Branding', media: 'Image', impr: 3414, eng: 361, react: 117 },
   { date: '1/23/2026', type: 'Thought Leadership', media: 'Text', impr: 4718, eng: 47, react: 15 },
   { date: '10/19/2025', type: 'Wishes', media: 'Video', impr: 2085, eng: 109, react: 45 },
   { date: '1/27/2026', type: 'Welcome aboard', media: 'Image', impr: 2251, eng: 242, react: 49 },
-  { date: '6/23/2025', type: 'Wishes', media: 'Image', impr: 1867, eng: 452, react: 42 },
   { date: '1/30/2026', type: 'Employer Branding', media: 'Video', impr: 1820, eng: 403, react: 64 },
   { date: '2/5/2026', type: 'Employee Milestone', media: 'Image', impr: 1999, eng: 204, react: 78 },
   { date: '11/5/2025', type: 'Welcome aboard', media: 'Image', impr: 1807, eng: 170, react: 84 },
