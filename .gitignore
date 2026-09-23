@@ -5,6 +5,11 @@ uploads/
 *.xlsx
 !app/src/data/*.ts
 
+# Upload-enabled dashboard — kept local only; the public repo/site ships
+# linkedin-analytics-dashboard-view.html (read-only) instead
+linkedin-analytics-dashboard.html
+LinkedIn Analytics Dashboard.dc.html
+
 # Dependencies & builds
 node_modules/
 dist/
